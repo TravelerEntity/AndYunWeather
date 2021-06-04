@@ -3,12 +3,15 @@
     package="com.lee.andcloud">
 
     <application
-        android:allowBackup="true"
+        android:name="org.litepal.LitePalApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="AndCloud"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndCloud">
+        android:theme="@style/Theme.AndCloud"
+        >
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
