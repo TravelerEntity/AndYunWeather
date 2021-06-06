@@ -3,4 +3,9 @@
     <string name="more">更多</string>
     <string name="load_file">加载失败</string>
     <string name="select_area">选择城市</string>
+    <string name="lb_forecast">预报</string>
+    <string name="air_quality">空气质量</string>
+    <string name="aqi_quality_index">AQI指数</string>
+    <string name="pm25_index">PM2.5指数</string>
+    <string name="life_suggestion">生活建议</string>
 </resources>
