@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 加载toolbar上的选项时系统调用
      * @param menu 要加载到这个menu上
-     * @return
+     * @return true or false
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,12 +53,15 @@ public class MainActivity extends AppCompatActivity {
     /**
      * toolbar上按钮被点击时调用
      * @param item 被点击的按钮
-     * @return
+     * @return true or false
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId() ){
             case R.id.it_more:
+                Intent intent = new Intent(MainActivity.this,WeatherActivity.class);
+                intent.putExtra("weather_id","10101000");
+                startActivity(intent);
                 Toast.makeText(this, "点击了更多按钮", Toast.LENGTH_SHORT).show();
                 break;
             /*toolbar上的导航按钮被点击时，最左边按钮*/

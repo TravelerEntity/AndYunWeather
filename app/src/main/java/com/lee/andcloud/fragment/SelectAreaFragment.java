@@ -68,7 +68,7 @@ public class SelectAreaFragment extends Fragment {
         Log.d(TAG, "onCreateView: ");
         /*初始化各种控件*/
         View view = inflater.inflate(R.layout.select_area, container ,false);
-        tvTitle = view.findViewById(R.id.tv_title);
+        tvTitle = view.findViewById(R.id.tv_title_selectArea);
         btBack = view.findViewById(R.id.ibt_back);
         listView = view.findViewById(R.id.lv_city);
         /*这里有个疑问，dataList是空的，想通了，空就空呗，马上就会放数据进去的*/

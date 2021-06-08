@@ -24,6 +24,7 @@
         android:layout_gravity="end"
 
         tool:text= "天气信息"
+        android:textColor="#FFF"
         android:textSize="20sp"
         />
 </androidx.appcompat.widget.LinearLayoutCompat>

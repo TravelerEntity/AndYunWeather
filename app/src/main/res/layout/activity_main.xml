@@ -37,7 +37,7 @@
 
                     <include layout="@layout/now_weather" />
 
-                    <include layout="@layout/forcast_item_weather" />
+                    <include layout="@layout/forcast_weather" />
 
                     <include layout="@layout/aqi_weather" />
 

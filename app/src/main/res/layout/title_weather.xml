@@ -27,7 +27,7 @@
 
         android:textSize="20sp"
         tools:text="更新的时间"
-
+        android:textColor="#FFF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

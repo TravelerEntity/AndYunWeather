@@ -1,16 +1,42 @@
 package com.lee.andcloud.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.lee.andcloud.db.City;
 import com.lee.andcloud.db.County;
 import com.lee.andcloud.db.Province;
+import com.lee.andcloud.gson.WeatherNow;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import okhttp3.ResponseBody;
+
 public class Utility {
+    private static final String TAG = "Utility";
+
+    /**
+     * 解析传入的json格式的字符串
+     * @param response 服务器响应的当前天气字符串，json格式
+     * @return 当前天气的json对象
+     */
+    public static WeatherNow handleWeatherResponse(String response){
+        try{
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject resultOfWeatherNow = jsonObject.getJSONObject("result").getJSONObject("realtime");
+//            Log.d(TAG, "handleWeatherResponse: "+resultOfWeatherNow.getJSONObject("realtime").toString() );
+//            Log.d(TAG, "handleWeatherResponse: "+resultOfWeatherNow.toString() );
+            /*JSON转GSON转WeatherNow类对象*/
+            return new Gson().fromJson(resultOfWeatherNow.toString(),WeatherNow.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /*
     处理服务器相应回来省份字符串，这里的三个方法分别用来处理省、市、县的数据
