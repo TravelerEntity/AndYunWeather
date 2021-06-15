@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AndCloud</string>
+    <string name="air_quality">Air quality</string>
+    <string name="aqi_quality_index">Air index</string>
+    <string name="lb_forecast">Forecast</string>
+    <string name="life_suggestion">Life suuggestion</string>
+    <string name="load_file">Load file</string>
+    <string name="more">More</string>
+    <string name="pm25_index">PM 2.5</string>
+    <string name="select_area">Select city</string>
+    <string name="tommorow">Tomorrow</string>
+    <string name="wind_dir">Wind direction</string>
+    <string name="temp_appear">Appear temp</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="temp_unit">tempUnit</string>
+    <string name="pressure_unit">Hpa</string>
+</resources>

@@ -1,42 +1,84 @@
 package com.lee.andcloud.util;
 
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.lee.andcloud.db.City;
 import com.lee.andcloud.db.County;
 import com.lee.andcloud.db.Province;
-import com.lee.andcloud.gson.WeatherNow;
+import com.lee.andcloud.gson.DailyWeather;
+import com.lee.andcloud.gson.WeatherNowCY;
+import com.lee.andcloud.gson.WeatherNowHF;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import okhttp3.ResponseBody;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utility {
     private static final String TAG = "Utility";
 
-    /**
-     * 解析传入的json格式的字符串
-     * @param response 服务器响应的当前天气字符串，json格式
-     * @return 当前天气的json对象
-     */
-    public static WeatherNow handleWeatherResponse(String response){
+    
+    
+    public static WeatherNowHF handleWeatherResponseHF(String response){
         try{
             JSONObject jsonObject = new JSONObject(response);
-            JSONObject resultOfWeatherNow = jsonObject.getJSONObject("result").getJSONObject("realtime");
-//            Log.d(TAG, "handleWeatherResponse: "+resultOfWeatherNow.getJSONObject("realtime").toString() );
-//            Log.d(TAG, "handleWeatherResponse: "+resultOfWeatherNow.toString() );
+            JSONObject resultOfWeatherNowHF = jsonObject.getJSONObject("now");
+            WeatherNowHF weatherNowHF = new Gson().fromJson(resultOfWeatherNowHF.toString(),WeatherNowHF.class);
+            /*保存响应代码*/
+            weatherNowHF.status = jsonObject.getString("code");
             /*JSON转GSON转WeatherNow类对象*/
-            return new Gson().fromJson(resultOfWeatherNow.toString(),WeatherNow.class);
+            return weatherNowHF;
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+
+    /** 彩云天气源
+     * 解析传入的json格式的字符串
+     * @param response 服务器响应的当前天气字符串，json格式
+     * @return 当前天气的json对象
+     */
+    public static WeatherNowCY handleWeatherResponseCY(String response){
+        try{
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject resultOfWeatherNow = jsonObject.getJSONObject("result").getJSONObject("realtime");
+            WeatherNowCY weatherNowCY = new Gson().fromJson(resultOfWeatherNow.toString(), WeatherNowCY.class);
+            /*保存服务器响应时间*/
+            weatherNowCY.responseTime = jsonObject.getString("server_time");
+            return weatherNowCY;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static List<DailyWeather> handleWeatherForecastHF(String responseText) {
+        try{
+            Gson gson = new Gson();
+            JSONObject jsonObject = new JSONObject(responseText);
+            JSONArray weatherJSONArray = jsonObject.getJSONArray("daily");
+
+            Log.d(TAG, "handleWeatherForecastHF: "+weatherJSONArray.get(0));
+            List<DailyWeather> weatherList =gson.fromJson(weatherJSONArray.toString(),new TypeToken<List<DailyWeather>>(){}.getType());
+
+            return weatherList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
     /*
     处理服务器相应回来省份字符串，这里的三个方法分别用来处理省、市、县的数据
@@ -115,6 +157,7 @@ public class Utility {
         }
         return  false;
     }
+
 
 
 }

@@ -1,91 +1,62 @@
 package com.lee.andcloud.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.preference.PreferenceManager;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import com.lee.andcloud.R;
 import com.lee.andcloud.gson.AirQuality;
-import com.lee.andcloud.gson.LifeIndex;
+import com.lee.andcloud.gson.DailyWeather;
 import com.lee.andcloud.gson.Precipitation;
-import com.lee.andcloud.gson.WeatherNow;
+import com.lee.andcloud.gson.WeatherNowCY;
+import com.lee.andcloud.gson.WeatherNowHF;
 import com.lee.andcloud.util.HttpUtil;
 import com.lee.andcloud.util.Utility;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class WeatherActivity extends AppCompatActivity {
-    private static final String caiyunToken = "VU1I3Ri5V2DoJgD7";
+    private static final String HFTOKEN = "efa4346f71d446c9a35dd3224249ae47";
     private static final String TAG = "WeatherActivity";
-    /*顶部toolbar*/
-    private Toolbar tbHead;
-
-    /*页面布局控件*/
-    private DrawerLayout drawerLayout;
-    private NestedScrollView nsvWeather;
-    private LinearLayout llForecast;
-
-    /*页面的文本控件*/
-    private TextView tvTitleCity;
-    private TextView tvTitleUpdateTime;
-    private TextView tvDegree;
-    private TextView tvWeatherInfo;
-    private TextView tvPM25;
-    private TextView tvAQI;
-    private TextView tvComfort;
-    private TextView tvCarWashing;
-    private TextView tvSport;
+    private static final String LOC_TEST = "106.3944,30.2752";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        /*初始化页面控件*/
-        initWidget();
-
-        /*用toolbar替代actionbar*/
-        setSupportActionBar(tbHead);
-
-        loadNavBtn();
-
         /*加载天气数据*/
         SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
-        String weatherString = shp.getString("weather",null);
+        String weatherString = shp.getString("weatherHF",null);
         if(weatherString != null) {
             /*有缓存时就直接从本地加载*/
-            WeatherNow  weatherNow = Utility.handleWeatherResponse(weatherString);
-            showWeatherInfo(weatherNow);
+//            WeatherNowHF weatherNowHf = Utility.handleWeatherResponseHF(weatherString);
+            requestWeatherHF("23");
+            requestForecastHF();
         } else {
             String weatherId = getIntent().getStringExtra("weather_id");
-            requestWeather(weatherId);
+            requestWeatherHF(weatherId);
+            requestForecastHF();
         }
-
     }
 
-    private void requestWeather(String weatherId) {
-        String weatherUrl = "https://api.caiyunapp.com/v2.5/VU1I3Ri5V2DoJgD7/106.3944,30.2752/realtime.json";
+    /*请求和风天气数据*/
+    private void requestWeatherHF(String weatherId) {
+        String weatherUrl = "https://devapi.qweather.com/v7/weather/now?key="+HFTOKEN+"&location=106.3944,30.2752";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -98,25 +69,24 @@ public class WeatherActivity extends AppCompatActivity {
                 });
 
             }
-
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseText = response.body().string();
-                Log.d(TAG, "翻译翻译，什么叫: "+responseText);
-                final WeatherNow weatherNow = Utility.handleWeatherResponse(responseText);
-                Log.d(TAG, "onResponse: "+weatherNow.toString());
+                Log.d(TAG, "翻译翻译，什么叫现在的天气怎么样: "+responseText);
+                final WeatherNowHF weatherNowHF = Utility.handleWeatherResponseHF(responseText);
                 /*把数据保存进SharePreferences*/
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         /*判断是否正常返回了天气数据*/
-                        if( weatherNow != null && "ok".equals(weatherNow.status) ){
+                        if( weatherNowHF != null && "200".equals(weatherNowHF.status) ){
                             SharedPreferences.Editor editor = PreferenceManager
                                     .getDefaultSharedPreferences(WeatherActivity.this)
                                     .edit();
                             /*保存进preferences里面*/
-                            editor.putString("weather",responseText);
+                            editor.putString("weatherHF",responseText);
                             editor.apply();
+                            showWeatherInfoHF(weatherNowHF);
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -126,82 +96,108 @@ public class WeatherActivity extends AppCompatActivity {
         });
     }
 
-    private void showWeatherInfo(WeatherNow weatherNow) {
-        String temperature = weatherNow.temperature;
-        String apparentTemp = weatherNow.apparentTemp;
-        String humidity = weatherNow.humidity = weatherNow.humidity;
-        String cloudCon = weatherNow.cloudCondition;
-        AirQuality airQuality =  weatherNow.airQuality;
-        Precipitation precipitation = weatherNow.precipitation;
-        LifeIndex lifeIndex = weatherNow.lifeIndex;
+    /**
+     * 从服务器获取天气预报信息
+     */
+    private void requestForecastHF(){
+        String forecastUrl = "https://devapi.qweather.com/v7/weather/7d?location="+LOC_TEST+"&key="+HFTOKEN;
+        HttpUtil.sendOkHttpRequest(forecastUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(WeatherActivity.this, "从服务器获取天气预报信息失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-        /*对温度进行格式化*/
-        String tempString =String.valueOf( Math.round( Double.valueOf( temperature) ) ) ;
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseText = Objects.requireNonNull(response.body()).string();
+                Log.d(TAG, "翻译翻译，什么叫未来几天的天气情况: "+responseText);
 
-        tvDegree.setText(tempString+"°");
-        tvAQI.setText(airQuality.aqiValue.aqiValueCH);
-        tvPM25.setText(airQuality.pm25);
-        tvWeatherInfo.setText(cloudCon);
+                final List<DailyWeather> weatherList = Utility.handleWeatherForecastHF(responseText);
+                Log.d(TAG, "onResponse: "+ weatherList.toString());
+
+                /*把数据保存进SharePreferences*/
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        /*判断是否正常返回了天气数据*/
+                        if(true){
+//                            SharedPreferences.Editor editor = PreferenceManager
+//                                    .getDefaultSharedPreferences(MainActivity.this)
+//                                    .edit();
+//                            /*保存进preferences里面*/
+//                            editor.putString("weather",responseText);
+//                            editor.apply();
+                            showForecastHF(weatherList);
+                        } else {
+                            Toast.makeText(WeatherActivity.this, "获取天气预报信息失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
-    private void loadNavBtn() {
-        /*获取actionbar实例，不为空才会进行后面的设置*/
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_location_city_24);
+    private void showForecastHF(List<DailyWeather> weatherList) {
+        /*显示明天的天气*/
+        showTomorrowWeather(weatherList.get(0));
+        /*天气TextView 的id*/
+        int[] widgetIds = {
+                R.id.tv_forecast_date2,R.id.tv_forecast_highest2,R.id.tv_forecast_lowest2,
+                R.id.tv_forecast_date3,R.id.tv_forecast_highest3,R.id.tv_forecast_lowest3,
+                R.id.tv_forecast_date4,R.id.tv_forecast_highest4,R.id.tv_forecast_lowest4,
+        };
+
+        for (int idIndict = 0,dateIndic=1; idIndict < widgetIds.length; dateIndic++) {
+            /*获取一天天气实例*/
+            DailyWeather dailyWeather =  weatherList.get(dateIndic );
+
+            /*绑定一天的天气控件*/
+            TextView forecastData = findViewById( widgetIds[idIndict++] );
+            TextView forecastHighest = findViewById(widgetIds[idIndict++] );
+            TextView forecastLowest = findViewById(widgetIds[idIndict++] );
+
+            forecastData.setText("日期");
+
+            forecastHighest.setText( new StringBuilder(dailyWeather.tempMax+"°") );
+            forecastLowest.setText(new StringBuilder(dailyWeather.tempMin+"°") );
+            Log.d(TAG, "showForecastHF: "+dailyWeather.tempMax);
+            Log.d(TAG, "showForecastHF: "+dailyWeather.tempMin);
+                
         }
     }
 
     /**
-     * 加载toolbar上的选项时系统调用
-     * @param menu 要加载到这个menu上
-     * @return 是否成功
+     * 在界面显示明天的平均气温
+     * @param tomorrow 天气对象实例
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        /*加载菜单布局*/
-        getMenuInflater().inflate(R.menu.toolbar,menu);
-        return true;
+    private void showTomorrowWeather(DailyWeather tomorrow) {
+        int tMax = Integer.parseInt(tomorrow.tempMax);
+        int tMin = Integer.parseInt(tomorrow.tempMin);
+        TextView tvTomorrow = findViewById(R.id.tv_tomorrow_temp);
+        String avgTemp = (String.valueOf(Math.round( (tMax+tMin) /2.0) ) )+"°";
+        tvTomorrow.setText(avgTemp);
     }
 
-    /**
-     * toolbar上按钮被点击时调用
-     * @param item 被点击的按钮
-     * @return 是否成功
-     */
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId() ){
-            case R.id.it_more:
-                Toast.makeText(this, "点击了更多按钮", Toast.LENGTH_SHORT).show();
-                break;
-            /*toolbar上的导航按钮被点击时，最左边按钮*/
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                break;
-            default:
-        }
-        return true;
-    }
+    private void showWeatherInfoHF(WeatherNowHF weatherNowHf) {
+        TextView tvCurTemp = findViewById(R.id.tv_cur_temp);
+        TextView tvHumidity = findViewById(R.id.tv_bottom_humidity);
+        TextView tvAppearTemp = findViewById(R.id.tv_bottom_appear_temp);
+        TextView tvWindScale = findViewById(R.id.tv_bottom_aqi);
+        TextView tvPressure = findViewById(R.id.tv_bottom_pressure);
+        TextView tvWindDir = findViewById(R.id.tv_bottom_aqi_idict);
 
-    /**
-     * 初始化界面的View
-     */
-    private void initWidget() {
-        tbHead = findViewById(R.id.tb_head);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        nsvWeather = findViewById(R.id.nsv_weather_layout);
-        llForecast = findViewById(R.id.ll_forecast);
 
-        tvTitleCity = findViewById(R.id.tv_title_city);
-        tvTitleUpdateTime = findViewById(R.id.tv_title_update_time);
-        tvDegree = findViewById(R.id.tv_degree);
-        tvWeatherInfo = findViewById(R.id.tv_weather_info);
-        tvPM25 = findViewById(R.id.tv_pm25);
-        tvAQI = findViewById(R.id.tv_aqi);
-        tvComfort  = findViewById(R.id.tv_comfort);
-        tvCarWashing = findViewById(R.id.tv_car_washing);
-        tvSport = findViewById(R.id.tv_sport);
+        tvWindDir.setText(weatherNowHf.windDir);
+        tvCurTemp.setText(weatherNowHf.temperature);
+        tvWindScale.setText(new StringBuilder( weatherNowHf.windScale+"级" ) );
+        tvHumidity.setText(new StringBuilder( weatherNowHf.humidity + "%" ) );
+        tvAppearTemp.setText(new StringBuilder( weatherNowHf.feelsLike + "°" ) );
+        tvPressure.setText(new StringBuilder( weatherNowHf.pressure+"hPa" ) );
     }
 }

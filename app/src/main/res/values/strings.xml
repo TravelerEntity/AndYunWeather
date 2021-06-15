@@ -5,7 +5,14 @@
     <string name="select_area">选择城市</string>
     <string name="lb_forecast">预报</string>
     <string name="air_quality">空气质量</string>
-    <string name="aqi_quality_index">AQI指数</string>
+    <string name="aqi_quality_index">AQI</string>
     <string name="pm25_index">PM2.5指数</string>
     <string name="life_suggestion">生活建议</string>
+    <string name="tommorow">明天天气</string>
+    <string name="wind_dir">风向</string>
+    <string name="temp_appear">体感</string>
+    <string name="humidity">湿度</string>
+    <string name="pressure">气压</string>
+    <string name="temp_unit">°</string>
+    <string name="pressure_unit">hPa</string>
 </resources>

@@ -7,10 +7,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * 当前天气的jsonmapper，对应彩云返回值中的result对象
  */
-public class WeatherNow {
+public class WeatherNowCY {
 
     /*实时天气返回状态*/
     public String status;
+
+    /*服务器响应的时间*/
+    @SerializedName("server_time")
+    public String responseTime;
 
     public String temperature;
 
@@ -27,8 +31,5 @@ public class WeatherNow {
 
     @SerializedName("air_quality")
     public AirQuality airQuality;
-
-    @SerializedName("life_index")
-    public LifeIndex lifeIndex;
 
 }

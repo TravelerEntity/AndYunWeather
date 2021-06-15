@@ -10,7 +10,7 @@
     <item
        android:id="@+id/it_more"
        android:icon="@drawable/ic_baseline_more_vert_24"
-       android:title="@string/more"
+       android:title="@string/app_name"
        app:showAsAction="ifRoom"
        />
 </menu>
