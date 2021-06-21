@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/humidity"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="@color/blue_grey_800_mix"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/temp_appear"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="@color/blue_grey_800_mix"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/aqi_quality_index"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="@color/blue_grey_800_mix"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />
@@ -85,7 +85,7 @@
 
 
         android:text="@string/pressure"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="@color/blue_grey_800_mix"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />

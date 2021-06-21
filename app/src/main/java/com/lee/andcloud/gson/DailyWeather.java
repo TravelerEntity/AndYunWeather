@@ -22,16 +22,12 @@ public class DailyWeather {
     public String uvIndex;
 
 
-
     @Override
     public String toString() {
         return "DailyWeather{" +
                 "forecastDate='" + forecastDate + '\'' +
-                ", weatherIconId='" + weatherIconId + '\'' +
-                ", weatherDescDaylight='" + weatherDescDaylight + '\'' +
                 ", tempMax='" + tempMax + '\'' +
                 ", tempMin='" + tempMin + '\'' +
-                ", uvIndex='" + uvIndex + '\'' +
                 '}';
     }
 }

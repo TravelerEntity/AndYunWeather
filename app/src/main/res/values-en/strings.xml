@@ -14,6 +14,6 @@
     <string name="temp_appear">Appear temp</string>
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
-    <string name="temp_unit">tempUnit</string>
-    <string name="pressure_unit">Hpa</string>
+    <string name="temp_unit">°</string>
+    <string name="pressure_unit">hPa</string>
 </resources>

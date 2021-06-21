@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
     <!--showAsAction有三种取值：
         always，始终显示按钮在toolbar中
         ifRoom，空间够在折叠菜单显示，不够在toolbar中显示按钮
@@ -10,7 +12,8 @@
     <item
        android:id="@+id/it_more"
        android:icon="@drawable/ic_baseline_more_vert_24"
-       android:title="@string/app_name"
-       app:showAsAction="ifRoom"
+       android:title=""
+       app:showAsAction="always"
        />
+
 </menu>

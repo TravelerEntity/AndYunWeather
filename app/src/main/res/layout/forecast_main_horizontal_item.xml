@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
-    android:background="@color/blue_grey_900"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_grey_900">
 
     <!--后天#####################################-->
     <TextView
@@ -14,14 +13,13 @@
         android:layout_height="wrap_content"
         android:ems="1"
 
-        tool:text="周日"
-        android:textSize="28sp"
         android:textColor="@color/blue_grey_800_mix"
+        android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        tool:text="周日" />
 
 
     <TextView
@@ -30,48 +28,58 @@
         android:layout_height="wrap_content"
 
 
-        tool:text="29°"
-        android:textSize="24sp"
+        android:layout_marginEnd="10dp"
         android:textColor="@color/blue_grey_100"
+        android:textSize="24sp"
         android:textStyle="bold"
 
-        android:layout_marginEnd="10dp"
+        app:layout_constraintStart_toEndOf="@id/tv_forecast_date2"
 
         app:layout_constraintTop_toTopOf="@id/tv_forecast_date2"
-        app:layout_constraintStart_toEndOf="@id/tv_forecast_date2"
-        />
+        tool:text="29°" />
 
     <TextView
         android:id="@+id/tv_forecast_lowest2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        tool:text="10°"
-        android:textSize="22sp"
         android:textColor="@color/blue_grey_100"
+        android:textSize="22sp"
         android:textStyle="bold"
-
         app:layout_constraintBottom_toBottomOf="@id/tv_forecast_date2"
+
         app:layout_constraintStart_toEndOf="@id/tv_forecast_date2"
-        />
+        tool:text="10°" />
+
+    <ImageView
+        android:id="@+id/iv_forecast_date2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_outline_wb_sunny_24"
+        app:layout_constraintEnd_toEndOf="@+id/tv_forecast_lowest2"
+        app:layout_constraintStart_toStartOf="@+id/tv_forecast_date2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_forecast_date2" />
 
     <!--未来第三天###########################################-->
+
+
     <TextView
         android:id="@+id/tv_forecast_date3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="1"
 
-        tool:text="周日"
-        android:textSize="28sp"
         android:textColor="@color/blue_grey_800_mix"
+        android:textSize="24sp"
         android:textStyle="bold"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
 
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="周日" />
 
     <TextView
         android:id="@+id/tv_forecast_highest3"
@@ -79,30 +87,39 @@
         android:layout_height="wrap_content"
 
 
-        tool:text="29°"
-        android:textSize="24sp"
+        android:layout_marginEnd="10dp"
         android:textColor="@color/blue_grey_100"
+        android:textSize="24sp"
         android:textStyle="bold"
 
-        android:layout_marginEnd="10dp"
+        app:layout_constraintStart_toEndOf="@id/tv_forecast_date3"
 
         app:layout_constraintTop_toTopOf="@id/tv_forecast_date3"
-        app:layout_constraintStart_toEndOf="@id/tv_forecast_date3"
-        />
+        tool:text="29°" />
 
     <TextView
         android:id="@+id/tv_forecast_lowest3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        tool:text="10°"
-        android:textSize="22sp"
         android:textColor="@color/blue_grey_100"
+        android:textSize="22sp"
         android:textStyle="bold"
-
         app:layout_constraintBottom_toBottomOf="@id/tv_forecast_date3"
+
         app:layout_constraintStart_toEndOf="@id/tv_forecast_date3"
-        />
+        tool:text="10°" />
+
+    <ImageView
+        android:id="@+id/iv_forecast_date3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_outline_wb_sunny_24"
+        app:layout_constraintEnd_toEndOf="@+id/tv_forecast_lowest3"
+        app:layout_constraintStart_toStartOf="@+id/tv_forecast_date3"
+        app:layout_constraintTop_toBottomOf="@+id/tv_forecast_date3" />
 
     <!--未来四天#################################-->
     <TextView
@@ -111,15 +128,14 @@
         android:layout_height="wrap_content"
         android:ems="1"
 
-        tool:text="周日"
-        android:textSize="28sp"
         android:textColor="@color/blue_grey_800_mix"
+        android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/tv_forecast_lowest4"
 
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_forecast_lowest4"
-        />
+        tool:text="周日" />
 
 
     <TextView
@@ -127,29 +143,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        tool:text="29°"
-        android:textSize="24sp"
         android:textColor="@color/blue_grey_100"
+        android:textSize="24sp"
         android:textStyle="bold"
-
-
+        app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintTop_toTopOf="@id/tv_forecast_date4"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        tool:text="29°" />
 
     <TextView
         android:id="@+id/tv_forecast_lowest4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        tool:text="10°"
-        android:textSize="22sp"
         android:textColor="@color/blue_grey_100"
+        android:textSize="22sp"
         android:textStyle="bold"
-
         app:layout_constraintBottom_toBottomOf="@id/tv_forecast_date4"
+
         app:layout_constraintStart_toStartOf="@id/tv_forecast_highest4"
-        />
+        tool:text="10°" />
+
+    <ImageView
+        android:id="@+id/iv_forecast_date4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_outline_wb_sunny_24"
+        app:layout_constraintEnd_toEndOf="@+id/tv_forecast_lowest4"
+        app:layout_constraintStart_toStartOf="@+id/tv_forecast_date4"
+        app:layout_constraintTop_toBottomOf="@+id/tv_forecast_date4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

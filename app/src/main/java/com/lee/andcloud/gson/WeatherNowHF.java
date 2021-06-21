@@ -16,6 +16,8 @@ public class WeatherNowHF {
     @SerializedName("text")
     public String weatherCondition;
 
+    public String icon;
+
     public String pressure;
 
     public String humidity;

@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     /*顶部toolbar*/
     private Toolbar tbHead;
 
+
     /*页面布局控件*/
     private DrawerLayout drawerLayout;
     private NestedScrollView nsvWeather;
@@ -284,9 +285,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId() ){
             case R.id.it_more:
-                Intent intent = new Intent(MainActivity.this,Temp.class);
-                intent.putExtra("weather_id","10101000");
-                startActivity(intent);
                 Toast.makeText(this, "点击了更多按钮", Toast.LENGTH_SHORT).show();
                 break;
             /*toolbar上的导航按钮被点击时，最左边按钮*/

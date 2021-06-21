@@ -1,36 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.MainActivity"
-    android:background="@color/blue_grey_900">
+    android:background="@color/blue_grey_900"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <!--顶部信息栏，显示地点和时间###############################################-->
-        <TextView
-            android:id="@+id/tv_city_name"
-            android:layout_width="wrap_content"
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="0dp"
+            >
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_head_city"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:background="@color/blue_grey_900"
+                toolbar:titleMargin="0dp"
+                >
+                <TextView
+                    android:id="@+id/tv_head_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-            tools:text="广安区"
-            android:textStyle="bold"
-            android:textSize="42sp"
-            android:textColor="@color/blue_grey_100"
-            />
+                    tools:text="广安城市"
+                    android:textColor="@color/blue_grey_100"
+                    android:textStyle="bold"
+                    android:textSize="36sp"
+                    android:layout_gravity="center"
+                    />
 
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+        <!--顶部信息栏，显示地点和时间###############################################-->
         <TextView
             android:id="@+id/tv_update_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             tools:text="19:32"
+            android:layout_marginTop="6dp"
             android:textSize="28sp"
             android:textColor="@color/blue_grey_100"
             android:textStyle="bold"
+            android:layout_gravity="center"
             />
 
         <!--今日天气信息##############################################################-->
@@ -38,7 +59,7 @@
             layout="@layout/weather_now_main"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             />
 
         <!--明天天气预报###############################################-->
@@ -46,6 +67,7 @@
             layout="@layout/weather_tomorrow_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             />
 
         <!--未来天气预报#################################-->

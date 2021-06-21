@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.lee.andcloud.R;
 import com.lee.andcloud.db.City;
 import com.lee.andcloud.db.County;
 import com.lee.andcloud.db.Province;
