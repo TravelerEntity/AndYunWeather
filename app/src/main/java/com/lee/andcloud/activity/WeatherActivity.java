@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.BlockingDeque;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -55,6 +56,7 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
     private static final String LOC_TEST = "106.3944,30.2752";
     /*location实例*/
     private TencentLocation location;
+    TencentLocationManager locationManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,33 +72,48 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
 
         requirePermission();
 
-//        getLocation();
-        new Location(WeatherActivity.this,this).start();
+        getLocation();
 
-        setToolbar();
+//        setToolbar();
+    }
 
-        /*加载天气数据*/
-//        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
-//        String weatherString = shp.getString("weatherHF",null);
-//        if(weatherString != null) {
-//            /*有缓存时就直接从本地加载*/
-////            WeatherNowHF weatherNowHf = Utility.handleWeatherResponseHF(weatherString);
-//            requestWeatherHF("23");
-//            requestForecastHF();
-//        } else {
-//            String weatherId = getIntent().getStringExtra("weather_id");
-//            requestWeatherHF(weatherId);
-//            requestForecastHF();
-//        }
+    /*开子线程获取定位*/
+    private void getLocation() {
+        new Thread("定位线程") {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: " + getName());
+                TencentLocationRequest request = TencentLocationRequest.create();
+                request.setRequestLevel(3);
 
+                locationManager = TencentLocationManager.getInstance(WeatherActivity.this);
+                int a = locationManager.requestLocationUpdates(request, WeatherActivity.this, Looper.getMainLooper());
+            }
+        }.start();
 
+    }
+    /*加载天气数据*/
+    private void loadWeather() {
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+        String weatherString = shp.getString("weatherHF",null);
+        if(weatherString != null) {
+            /*有缓存时就直接从本地加载*/
+//            WeatherNowHF weatherNowHf = Utility.handleWeatherResponseHF(weatherString);
+            requestWeatherHF("23");
+            requestForecastHF();
+        } else {
+            String weatherId = getIntent().getStringExtra("weather_id");
+            requestWeatherHF(weatherId);
+            requestForecastHF();
+        }
     }
 
     /*设置toolbar的样式*/
     private void setToolbar() {
         /*绑定toolbar*/
         Toolbar tbHead = findViewById(R.id.tb_head_city);
-        tbHead.setTitle("广安区");
+        /*将title设置为定位到的结果*/
+        tbHead.setTitle(location.getTown());
         setSupportActionBar(tbHead);
 
         TextView mTitle = findViewById(R.id.tv_head_city);
@@ -105,32 +122,21 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
     }
 
-    private synchronized void getLocation() {
 
-        TencentLocationRequest request = TencentLocationRequest.create();
-        request.setRequestLevel(3);
-
-        TencentLocationManager locationManager = TencentLocationManager.getInstance(this);
-//        int a = locationManager.requestSingleFreshLocation(null,this,Looper.getMainLooper());
-        int a = locationManager.requestLocationUpdates(request,this);
-        Log.d(TAG, "getLocation: 错误码是："+a);
-    }
 
     /*位置监听器回调*/
     @Override
     public void onLocationChanged(TencentLocation tencentLocation, int i, String s) {
-        Log.d(TAG, "onLocationChanged:"+i);
-        Log.d(TAG, "onLocationChanged: "+s);
-        Log.d(TAG, "onLocationChanged: 位置对象："+tencentLocation);
-        Log.d(TAG, "onLocationChanged: GPS强度："+tencentLocation.getGPSRssi());
+        locationManager.removeUpdates(this);
+        this.location = tencentLocation;
+        Log.d(TAG, "onLocationChanged: "+location);
+        setToolbar();
+        loadWeather();
 
     }
     /*位置监听器回调*/
     @Override
     public void onStatusUpdate(String s, int i, String s1) {
-        Log.d(TAG, "onStatusUpdate: 传感器："+s);
-        Log.d(TAG, "onStatusUpdate: 状态码："+i);
-        Log.d(TAG, "onStatusUpdate: 状态码描述："+s1);
     }
 
     /**
@@ -158,7 +164,8 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
     
     /*请求和风天气数据*/
     private void requestWeatherHF(String weatherId) {
-        String weatherUrl = "https://devapi.qweather.com/v7/weather/now?key="+HFTOKEN+"&location=106.3944,30.2752";
+//        String weatherUrl = "https://devapi.qweather.com/v7/weather/now?key="+HFTOKEN+"&location="+location.getLatitude()+","+location.getLongitude();
+        String weatherUrl = "https://devapi.qweather.com/v7/weather/now?key="+HFTOKEN+"&location="+location.getLongitude()+","+location.getLatitude();
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -202,7 +209,7 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
      * 从服务器获取未来4天气预报信息
      */
     private void requestForecastHF(){
-        String forecastUrl = "https://devapi.qweather.com/v7/weather/7d?location="+LOC_TEST+"&key="+HFTOKEN;
+        String forecastUrl = "https://devapi.qweather.com/v7/weather/7d?location="+location.getLongitude()+","+location.getLatitude()+"&key="+HFTOKEN;
         Log.d(TAG, "requestForecastHF: "+forecastUrl);
         HttpUtil.sendOkHttpRequest(forecastUrl, new Callback() {
             @Override
