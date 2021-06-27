@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.lee.andcloud.R;
 import com.lee.andcloud.gson.City;
@@ -52,9 +53,9 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
     /*location实例*/
     private TencentLocation location;
     private TencentLocationManager locationManager;
-
     private DrawerLayout drawerLayout;
     private City.Geo geoLocation;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,8 +74,14 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
 
         getTheWeatherReady();
 
-        setToolbar();
-
+        swipeRefresh = findViewById(R.id.srl_swipe);
+        swipeRefresh.setColorSchemeResources(R.color.blue_grey_800_mix);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadWeather();
+            }
+        });
     }
 
 
@@ -110,7 +117,8 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
         /*绑定toolbar*/
         Toolbar tbHead = findViewById(R.id.tb_head_city);
         /*将title设置为定位到的结果*/
-//        tbHead.setTitle(location.getTown());
+        Log.d(TAG, "setToolbar: "+location);
+        tbHead.setTitle(location.getTown());
         setSupportActionBar(tbHead);
 
         TextView mTitle = findViewById(R.id.tv_head_city);
@@ -145,6 +153,7 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
                 request.setRequestLevel(3);
 
                 locationManager = TencentLocationManager.getInstance(WeatherActivity.this);
+                locationManager.requestLocationUpdates(request,WeatherActivity.this,Looper.getMainLooper());
             }
         }.start();
 
@@ -363,6 +372,7 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
         tvPressure.setText(new StringBuilder( weatherNowHf.pressure+"hPa" ) );
 
         ivCurTemp.setImageResource( getIconIdByNum(weatherNowHf.icon) );
+        swipeRefresh.setRefreshing(false);
     }
 
     /**

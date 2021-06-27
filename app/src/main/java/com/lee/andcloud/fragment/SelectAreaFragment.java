@@ -1,5 +1,7 @@
 package com.lee.andcloud.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -67,20 +71,23 @@ public class SelectAreaFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.VISIBLE);
                 Log.d(TAG, "afterTextChanged: "+s);
                 Log.d(TAG, "afterTextChanged: ###############");
                 queryCity(s.toString());
 
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+               try {
+                   Thread.sleep(600);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
                 if(cityList==null){
                     Toast.makeText(SelectAreaFragment.this.getContext(), "未搜索到结果...", Toast.LENGTH_SHORT).show(); return;}
                 recyclerView = view.findViewById(R.id.recycler_view_cities);
                 recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
                 recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -97,6 +104,7 @@ public class SelectAreaFragment extends Fragment {
                 }
                 if(cityList==null){
                     Toast.makeText(SelectAreaFragment.this.getContext(), "未搜索到结果...", Toast.LENGTH_SHORT).show(); return;}
+
                 recyclerView = view.findViewById(R.id.recycler_view_cities);
                 recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
                 recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
@@ -138,8 +146,14 @@ public class SelectAreaFragment extends Fragment {
     private void setCityList(List<City> cityList) {
         Log.d(TAG, "setCityList: "+cityList);
         this.cityList = cityList;
+        closeKeybord(getActivity() );
     }
 
-
+    public static void closeKeybord(Activity activity) {
+        InputMethodManager imm =  (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null) {
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
+    }
 
 }

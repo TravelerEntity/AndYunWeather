@@ -10,6 +10,6 @@
 
 
     <!--- This is the background color -->
-    <solid android:color="@color/white" />
+    <solid android:color="@color/grey_300" />
 
 </shape>
