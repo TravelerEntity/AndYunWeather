@@ -25,7 +25,7 @@ public class Temp extends AppCompatActivity implements TencentLocationListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temp);
+//        setContentView(R.layout.activity_temp);
 
         requirePermission();
 //        requirePermission();

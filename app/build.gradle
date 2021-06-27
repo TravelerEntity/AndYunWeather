@@ -48,8 +48,8 @@ dependencies {
     implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
     /*动态权申请*/
     implementation 'pub.devrel:easypermissions:3.0.0'
-
-
+//    /*自定义阴影颜色*/
+//    implementation 'com.zyp.cardview:cardview:1.0.1'
 }
 repositories {
     jcenter()

@@ -15,4 +15,5 @@
     <string name="pressure">气压</string>
     <string name="temp_unit">°</string>
     <string name="pressure_unit">hPa</string>
+    <string name="search_city_hint">搜索城市...</string>
 </resources>

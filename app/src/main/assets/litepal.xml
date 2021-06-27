@@ -7,7 +7,6 @@
     <!--映射-->
     <list>
         <mapping class="com.lee.andcloud.db.Province" />
-        <mapping class="com.lee.andcloud.db.City" />
         <mapping class="com.lee.andcloud.db.County" />
     </list>
 

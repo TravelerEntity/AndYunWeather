@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
         /*初始化页面控件*/
         initWidget();
 
@@ -265,18 +265,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 加载toolbar上的选项时系统调用
-     * @param menu 要加载到这个menu上
-     * @return true or false
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        /*加载菜单布局*/
-        getMenuInflater().inflate(R.menu.toolbar,menu);
-        return true;
-    }
-
-    /**
      * toolbar上按钮被点击时调用
      * @param item 被点击的按钮
      * @return true or false
@@ -284,9 +272,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId() ){
-            case R.id.it_more:
-                Toast.makeText(this, "点击了更多按钮", Toast.LENGTH_SHORT).show();
-                break;
+//            case R.id.it_more:
+//                Toast.makeText(this, "点击了更多按钮", Toast.LENGTH_SHORT).show();
+//                break;
             /*toolbar上的导航按钮被点击时，最左边按钮*/
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
@@ -302,17 +290,17 @@ public class MainActivity extends AppCompatActivity {
     private void initWidget() {
         tbHead = findViewById(R.id.tb_head);
         drawerLayout = findViewById(R.id.drawer_layout);
-        nsvWeather = findViewById(R.id.nsv_weather_layout);
-        llForecast = findViewById(R.id.ll_forecast);
-
-        tvTitleCity = findViewById(R.id.tv_title_city);
-        tvTitleUpdateTime = findViewById(R.id.tv_title_update_time);
-        tvDegree = findViewById(R.id.tv_degree);
-        tvWeatherInfo = findViewById(R.id.tv_weather_info);
-        tvPM25 = findViewById(R.id.tv_pm25);
-        tvAQI = findViewById(R.id.tv_aqi);
-        tvComfort  = findViewById(R.id.tv_comfort);
-        tvCarWashing = findViewById(R.id.tv_car_washing);
-        tvSport = findViewById(R.id.tv_sport);
+//        nsvWeather = findViewById(R.id.nsv_weather_layout);
+//        llForecast = findViewById(R.id.ll_forecast);
+//
+//        tvTitleCity = findViewById(R.id.tv_title_city);
+//        tvTitleUpdateTime = findViewById(R.id.tv_title_update_time);
+//        tvDegree = findViewById(R.id.tv_degree);
+//        tvWeatherInfo = findViewById(R.id.tv_weather_info);
+//        tvPM25 = findViewById(R.id.tv_pm25);
+//        tvAQI = findViewById(R.id.tv_aqi);
+//        tvComfort  = findViewById(R.id.tv_comfort);
+//        tvCarWashing = findViewById(R.id.tv_car_washing);
+//        tvSport = findViewById(R.id.tv_sport);
     }
 }

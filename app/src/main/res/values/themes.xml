@@ -16,6 +16,7 @@
             tools:targetApi="l">@color/blue_grey_900</item>
         <item name="windowNoTitle">true</item>
         <!-- Customize your theme here. -->
+
     </style>
 
 </resources>
