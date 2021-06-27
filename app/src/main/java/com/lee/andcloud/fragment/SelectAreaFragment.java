@@ -30,6 +30,7 @@ import com.lee.andcloud.util.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -57,7 +58,9 @@ public class SelectAreaFragment extends Fragment {
         Log.d(TAG, "onViewCreated: ");
 
         etCityQuery = view.findViewById(R.id.et_search_city);
+        recyclerView = view.findViewById(R.id.recycler_view_cities);
         Button btSendQuery = view.findViewById(R.id.bt_search_city);
+        initCitylist();
         etCityQuery.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,6 +91,7 @@ public class SelectAreaFragment extends Fragment {
                 recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
                 recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
                 progressBar.setVisibility(View.GONE);
+                closeKeybord(getActivity() );
             }
         });
 
@@ -105,9 +109,9 @@ public class SelectAreaFragment extends Fragment {
                 if(cityList==null){
                     Toast.makeText(SelectAreaFragment.this.getContext(), "未搜索到结果...", Toast.LENGTH_SHORT).show(); return;}
 
-                recyclerView = view.findViewById(R.id.recycler_view_cities);
                 recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
                 recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
+                closeKeybord(getActivity() );
             }
         });
 
@@ -146,7 +150,7 @@ public class SelectAreaFragment extends Fragment {
     private void setCityList(List<City> cityList) {
         Log.d(TAG, "setCityList: "+cityList);
         this.cityList = cityList;
-        closeKeybord(getActivity() );
+
     }
 
     public static void closeKeybord(Activity activity) {
@@ -154,6 +158,19 @@ public class SelectAreaFragment extends Fragment {
         if(imm != null) {
             imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
+    }
+
+    private void initCitylist(){
+        String[] cityName ={"北京","上海","成都","长沙","达州"};
+        String[] cityGeo ={"116.41,39.91","121.48,31.22","104.04,30.40","113.00,28.21","107.50,31.22"};
+        cityList = new ArrayList<>();
+        for (int i = 0; i < cityGeo.length; i++) {
+            cityList.add(new City(cityName[i],cityGeo[i]));
+        }
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
+        recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
+
     }
 
 }

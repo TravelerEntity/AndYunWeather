@@ -87,6 +87,7 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
 
     /*加载天气数据*/
     public void loadWeather() {
+        swipeRefresh.setRefreshing(true);
         SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = shp.getString("weatherHF",null);
         if(weatherString != null) {
@@ -107,6 +108,9 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
         switch (item.getItemId() ){
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.it_more:
+                Toast.makeText(this, "为什么不试试点左边的按钮😀", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -251,6 +255,7 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
                 });
             }
         });
+
     }
 
     /**
