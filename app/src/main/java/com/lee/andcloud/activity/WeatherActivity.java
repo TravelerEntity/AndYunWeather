@@ -321,7 +321,6 @@ public class WeatherActivity extends AppCompatActivity implements TencentLocatio
         for (int idIndex = 0,dateIndex=2; idIndex < widgetIds.length; dateIndex++) {
             /*获取一天天气实例*/
             DailyWeather dailyWeather =  weatherList.get(dateIndex );
-
             /*绑定一天的天气控件*/
             TextView forecastData = findViewById( widgetIds[idIndex++] );
             TextView forecastHighest = findViewById(widgetIds[idIndex++] );

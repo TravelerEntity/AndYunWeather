@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lee.andcloud.R;
+import com.lee.andcloud.activity.WeatherActivity;
 import com.lee.andcloud.gson.City;
 import com.lee.andcloud.util.CityAdapter;
 import com.lee.andcloud.util.HttpUtil;
@@ -43,6 +44,8 @@ public class SelectAreaFragment extends Fragment {
     private RecyclerView recyclerView;
     private EditText etCityQuery;
     private List<City> cityList;
+    private View view;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -57,10 +60,12 @@ public class SelectAreaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated: ");
 
+        this.view = view;
+        progressBar = view.findViewById(R.id.progressBar);
         etCityQuery = view.findViewById(R.id.et_search_city);
         recyclerView = view.findViewById(R.id.recycler_view_cities);
         Button btSendQuery = view.findViewById(R.id.bt_search_city);
-        initCitylist();
+        initCityList();
         etCityQuery.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -79,19 +84,6 @@ public class SelectAreaFragment extends Fragment {
                 Log.d(TAG, "afterTextChanged: "+s);
                 Log.d(TAG, "afterTextChanged: ###############");
                 queryCity(s.toString());
-
-               try {
-                   Thread.sleep(600);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-                if(cityList==null){
-                    Toast.makeText(SelectAreaFragment.this.getContext(), "未搜索到结果...", Toast.LENGTH_SHORT).show(); return;}
-                recyclerView = view.findViewById(R.id.recycler_view_cities);
-                recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
-                recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
-                progressBar.setVisibility(View.GONE);
-                closeKeybord(getActivity() );
             }
         });
 
@@ -100,18 +92,6 @@ public class SelectAreaFragment extends Fragment {
             public void onClick(View v) {
                 String keyword = etCityQuery.getText().toString();
                 if ("".equals(keyword)){return;}
-                queryCity(keyword);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(cityList==null){
-                    Toast.makeText(SelectAreaFragment.this.getContext(), "未搜索到结果...", Toast.LENGTH_SHORT).show(); return;}
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
-                recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
-                closeKeybord(getActivity() );
             }
         });
 
@@ -142,35 +122,41 @@ public class SelectAreaFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseText = response.body().string();
-                setCityList(Utility.handleCitiesListResponse(responseText) );
+                cityList = Utility.handleCitiesListResponse(responseText) ;
+
+                /*判断有没有找到城市*/
+                if(cityList==null){return;}
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView = view.findViewById(R.id.recycler_view_cities);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
+                        recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
+                        progressBar.setVisibility(View.GONE);
+                        closeKeyboard(getActivity());
+                    }
+                });
             }
         });
     }
 
-    private void setCityList(List<City> cityList) {
-        Log.d(TAG, "setCityList: "+cityList);
-        this.cityList = cityList;
-
-    }
-
-    public static void closeKeybord(Activity activity) {
+    public static void closeKeyboard(Activity activity) {
         InputMethodManager imm =  (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(imm != null) {
             imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
     }
 
-    private void initCitylist(){
+    private void initCityList(){
         String[] cityName ={"北京","上海","成都","长沙","达州"};
         String[] cityGeo ={"116.41,39.91","121.48,31.22","104.04,30.40","113.00,28.21","107.50,31.22"};
         cityList = new ArrayList<>();
         for (int i = 0; i < cityGeo.length; i++) {
             cityList.add(new City(cityName[i],cityGeo[i]));
         }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(SelectAreaFragment.this.getContext())); //设置布局管理器
         recyclerView.setAdapter(new CityAdapter(cityList,SelectAreaFragment.this.getContext()));    //设置Adapt
-
+        closeKeyboard(getActivity() );
     }
 
 }

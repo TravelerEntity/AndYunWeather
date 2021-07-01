@@ -3,12 +3,9 @@ package com.lee.andcloud.util;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-import com.lee.andcloud.gson.CitiesList;
 import com.lee.andcloud.gson.City;
 import com.lee.andcloud.gson.DailyWeather;
-import com.lee.andcloud.gson.WeatherNowCY;
 import com.lee.andcloud.gson.WeatherNowHF;
 
 import org.json.JSONArray;
@@ -31,26 +28,6 @@ public class Utility {
             weatherNowHF.status = jsonObject.getString("code");
             /*JSON转GSON转WeatherNow类对象*/
             return weatherNowHF;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    /** 彩云天气源
-     * 解析传入的json格式的字符串
-     * @param response 服务器响应的当前天气字符串，json格式
-     * @return 当前天气的json对象
-     */
-    public static WeatherNowCY handleWeatherResponseCY(String response){
-        try{
-            JSONObject jsonObject = new JSONObject(response);
-            JSONObject resultOfWeatherNow = jsonObject.getJSONObject("result").getJSONObject("realtime");
-            WeatherNowCY weatherNowCY = new Gson().fromJson(resultOfWeatherNow.toString(), WeatherNowCY.class);
-            /*保存服务器响应时间*/
-            weatherNowCY.responseTime = jsonObject.getString("server_time");
-            return weatherNowCY;
         } catch (JSONException e) {
             e.printStackTrace();
         }
